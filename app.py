@@ -659,7 +659,7 @@ def rysuj_wciecie_katowe_wprzod(xA, yA, xB, yB, alfa_deg, beta_deg, Xp, Yp):
 # NAGŁÓWEK APLIKACJI
 # ═══════════════════════════════════════════════════════════════
 
-st.title("Kalkulator Geodezyjny")
+st.title("Kalkulator Geodezyjny TEST1")
 st.caption("Politechnika Morska w Szczecinie | Geoinformatyka | PiG | 2026")
 st.caption("Autorzy: [I.I. 1], [J.D. 2], [S.K. 3]")
 
@@ -689,66 +689,205 @@ if funkcja.startswith("Odległość między punktami"):
         instrukcja_odleglosc()
 
     c1, c2 = st.columns(2)
-    x1 = c1.number_input("X₁ [m]", value=629663.67 , format="%.3f",
-                          help="Współrzędna X pierwszego punktu")
-    y1 = c2.number_input("Y₁ [m]", value=200851.91, format="%.3f",
-                          help="Współrzędna Y pierwszego punktu")
-    x2 = c1.number_input("X₂ [m]", value=629701.07, format="%.3f",
-                          help="Współrzędna X drugiego punktu")
-    y2 = c2.number_input("Y₂ [m]", value=200887.13, format="%.3f",
-                          help="Współrzędna Y drugiego punktu")
 
-    if st.button("Oblicz", type="primary",
-                 use_container_width=True):
+    x1 = c1.number_input(
+        "X₁ [m]",
+        value=629663.67,
+        format="%.3f",
+        help="Współrzędna X pierwszego punktu"
+    )
+
+    y1 = c2.number_input(
+        "Y₁ [m]",
+        value=200851.91,
+        format="%.3f",
+        help="Współrzędna Y pierwszego punktu"
+    )
+
+    x2 = c1.number_input(
+        "X₂ [m]",
+        value=629701.07,
+        format="%.3f",
+        help="Współrzędna X drugiego punktu"
+    )
+
+    y2 = c2.number_input(
+        "Y₂ [m]",
+        value=200887.13,
+        format="%.3f",
+        help="Współrzędna Y drugiego punktu"
+    )
+
+    if st.button(
+        "Oblicz",
+        type="primary",
+        use_container_width=True,
+        key="oblicz_odleglosc"
+    ):
+
+        # ── OBLICZENIA ───────────────────────
         d = odleglosc(x1, y1, x2, y2)
         dx = abs(x2 - x1)
         dy = abs(y2 - y1)
+
+        # ── WYNIKI ───────────────────────────
         st.success(f"Odległość = {d:.3f} m")
+
         c1, c2 = st.columns(2)
+
         c1.success(f"Przyrost ΔX:\n{dx:.3f} m")
         c2.success(f"Przyrost ΔY:\n{dy:.3f} m")
+
+        # ── RAPORT TXT ──────────────────────
+        raport_txt = f"""
+KALKULATOR GEODEZYJNY
+=====================
+
+MODUŁ:
+Odległość między punktami
+
+DANE WEJŚCIOWE:
+
+P1:
+X1 = {x1:.3f} m
+Y1 = {y1:.3f} m
+
+P2:
+X2 = {x2:.3f} m
+Y2 = {y2:.3f} m
+
+WYNIKI:
+
+Odległość = {d:.3f} m
+Przyrost ΔX = {dx:.3f} m
+Przyrost ΔY = {dy:.3f} m
+"""
+
+        # ── PRZYCISK POBIERANIA ─────────────
+        st.download_button(
+            label="💾 Zapisz wyniki TXT",
+            data=raport_txt,
+            file_name="odleglosc.txt",
+            mime="text/plain",
+            use_container_width=True,
+            key="download_odleglosc"
+        )
 
 # ═══════════════════════════════════════════════════════════════
 # FUNKCJA 2 – AZYMUT
 # ═══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════
+# FUNKCJA 2 – AZYMUT
+# ═══════════════════════════════════════════════════════════════
+
 elif funkcja.startswith("Azymut kierunku"):
     st.subheader("🧭 Azymut kierunku")
+
     with st.expander("Instrukcja"):
         instrukcja_azymut()
 
     c1, c2 = st.columns(2)
-    x1 = c1.number_input("X₁ [m]", value=10.0, format="%.4f")
-    y1 = c2.number_input("Y₁ [m]", value=10.0, format="%.4f")
-    x2 = c1.number_input("X₂ [m]", value=30.0, format="%.4f")
-    y2 = c2.number_input("Y₂ [m]", value=50.0, format="%.4f")
 
-    if st.button("Oblicz azymut", type="primary", use_container_width=True):
+    x1 = c1.number_input(
+        "X₁ [m]",
+        value=10.0,
+        format="%.4f"
+    )
+
+    y1 = c2.number_input(
+        "Y₁ [m]",
+        value=10.0,
+        format="%.4f"
+    )
+
+    x2 = c1.number_input(
+        "X₂ [m]",
+        value=30.0,
+        format="%.4f"
+    )
+
+    y2 = c2.number_input(
+        "Y₂ [m]",
+        value=50.0,
+        format="%.4f"
+    )
+
+    if st.button(
+        "Oblicz azymut",
+        type="primary",
+        use_container_width=True,
+        key="oblicz_azymut"
+    ):
+
         try:
+            # ── OBLICZENIA ─────────────────────
             az_g = azymut(x1, y1, x2, y2)
             d = odleglosc(x1, y1, x2, y2)
-            
-            # 2. Przeliczenie na STOPNIE do rysowania
+
+            # grad → stopnie
             az_deg = az_g * 0.9
-            
+
+            # ── WYNIKI ─────────────────────────
             c1, c2, c3 = st.columns(3)
+
             c1.success(f"Grady:\n{az_g:.4f}")
             c2.success(f"Stopnie:\n{az_deg:.2f}")
             c3.success(f"Odległość:\n{d:.3f} m")
-            
-            # 4. Wykres
+
+            # ── RAPORT TXT ─────────────────────
+            raport_txt = f"""
+KALKULATOR GEODEZYJNY
+=====================
+
+MODUŁ:
+Azymut kierunku
+
+DANE WEJŚCIOWE:
+
+P1:
+X1 = {x1:.4f} m
+Y1 = {y1:.4f} m
+
+P2:
+X2 = {x2:.4f} m
+Y2 = {y2:.4f} m
+
+WYNIKI:
+
+Azymut = {az_g:.4f} g
+Azymut = {az_deg:.2f} °
+Odległość = {d:.3f} m
+"""
+
+            # ── PRZYCISK POBIERANIA ────────────
+            st.download_button(
+                label="💾 Zapisz wyniki TXT",
+                data=raport_txt,
+                file_name="azymut.txt",
+                mime="text/plain",
+                use_container_width=True,
+                key="download_azymut"
+            )
+
+            # ── WYKRES ─────────────────────────
             with st.expander("Prezentacja graficzna", expanded=False):
                 fig = rysuj_azymut(x1, y1, x2, y2, az_deg)
                 st.pyplot(fig, use_container_width=False)
-                
+
         except ValueError as e:
             st.error(str(e))
+# ═══════════════════════════════════════════════════════════════
+# FUNKCJA 3 – POLE WIELOBOKU
+# ═══════════════════════════════════════════════════════════════
 
 # ═══════════════════════════════════════════════════════════════
 # FUNKCJA 3 – POLE WIELOBOKU
 # ═══════════════════════════════════════════════════════════════
 
 elif funkcja.startswith("Pole powierzchni wieloboku"):
+
     st.subheader("📐 Pole powierzchni wieloboku")
+
     with st.expander("Instrukcja"):
         instrukcja_pole()
 
@@ -761,6 +900,7 @@ elif funkcja.startswith("Pole powierzchni wieloboku"):
         })
 
     df = st.session_state.poly_df.copy()
+
     df.insert(0, "P", [f"P{i+1}" for i in range(len(df))])
 
     edited_df = st.data_editor(
@@ -769,10 +909,22 @@ elif funkcja.startswith("Pole powierzchni wieloboku"):
         use_container_width=True,
         hide_index=True,
         column_config={
-            "P": st.column_config.TextColumn("Punkt", disabled=True),
-            "X": st.column_config.NumberColumn("X [m]", format="%.3f"),
-            "Y": st.column_config.NumberColumn("Y [m]", format="%.3f"),
+            "P": st.column_config.TextColumn(
+                "Punkt",
+                disabled=True
+            ),
+
+            "X": st.column_config.NumberColumn(
+                "X [m]",
+                format="%.3f"
+            ),
+
+            "Y": st.column_config.NumberColumn(
+                "Y [m]",
+                format="%.3f"
+            ),
         },
+
         key="poly_editor"
     )
 
@@ -780,201 +932,723 @@ elif funkcja.startswith("Pole powierzchni wieloboku"):
 
     c1, c2 = st.columns(2)
 
-    if c1.button("Wczytaj przykład", use_container_width=True):
+    # ── PRZYCISK PRZYKŁAD ───────────────────
+    if c1.button(
+        "Wczytaj przykład",
+        use_container_width=True,
+        key="przyklad_pole"
+    ):
+
         st.session_state.poly_df = pd.DataFrame({
             "X": [629663.67, 629652.71, 629690.14, 629701.07],
             "Y": [200851.91, 200863.73, 200898.51, 200887.13]
         })
+
         st.rerun()
 
-    if c2.button("Wyczyść", use_container_width=True):
-        st.session_state.poly_df = pd.DataFrame({"X": [], "Y": []})
+    # ── PRZYCISK WYCZYŚĆ ───────────────────
+    if c2.button(
+        "Wyczyść",
+        use_container_width=True,
+        key="wyczysc_pole"
+    ):
+
+        st.session_state.poly_df = pd.DataFrame({
+            "X": [],
+            "Y": []
+        })
+
         st.rerun()
 
-    if st.button("Oblicz pole", type="primary", use_container_width=True):
+    # ── OBLICZENIA ─────────────────────────
+    if st.button(
+        "Oblicz pole",
+        type="primary",
+        use_container_width=True,
+        key="oblicz_pole"
+    ):
+
         try:
             df = st.session_state.poly_df.dropna()
 
             if len(df) < 3:
                 st.error("Podaj co najmniej 3 punkty.")
+
             else:
                 pts = df[["X", "Y"]].values.tolist()
+
                 p = pole_gaussa(pts)
 
+                # ── WYNIKI ─────────────────────
                 c1, c2, c3 = st.columns(3)
+
                 c1.success(f"Pole:\n {p:.2f} m²")
                 c2.success(f"Pole:\n {p/10000:.4f} ha")
                 c3.success(f"Liczba pkt.:\n {len(pts)}")
 
+                # ── RAPORT TXT ─────────────────
+                raport_txt = f"""
+KALKULATOR GEODEZYJNY
+=====================
+
+MODUŁ:
+Pole powierzchni wieloboku
+
+LICZBA PUNKTÓW:
+{len(pts)}
+
+WYNIKI:
+
+Pole = {p:.2f} m²
+Pole = {p/10000:.4f} ha
+"""
+
+                # ── POBIERANIE TXT ────────────
+                st.download_button(
+                    label="💾 Zapisz wyniki TXT",
+                    data=raport_txt,
+                    file_name="pole_wieloboku.txt",
+                    mime="text/plain",
+                    use_container_width=True,
+                    key="download_pole"
+                )
+
+                # ── WYKRES ────────────────────
                 with st.expander("Prezentacja graficzna"):
-                    st.pyplot(rysuj_wielobok(pts))
+
+                    st.pyplot(
+                        rysuj_wielobok(pts)
+                    )
 
         except Exception:
             st.error("Błąd danych. Sprawdź współrzędne.")
-
 # ═══════════════════════════════════════════════════════════════
 # FUNKCJA 4 – TRANSFORMACJA BIEGUNOWE ↔ PROSTOKĄTNE
 # ═══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════
+# FUNKCJA 4 – TRANSFORMACJA BIEGUNOWE ↔ PROSTOKĄTNE
+# ═══════════════════════════════════════════════════════════════
+
 elif funkcja.startswith("Transformacja biegunowe"):
-    st.subheader("🔁Transformacja biegunowe ↔ prostokątne")
+
+    st.subheader("🔁 Transformacja biegunowe ↔ prostokątne")
+
     with st.expander("Instrukcja"):
         instrukcja_transformacja()
 
     tryb = st.radio(
         "Tryb:",
-        ["Biegunowe → Prostokątne", "Prostokątne → Biegunowe"]
+        [
+            "Biegunowe → Prostokątne",
+            "Prostokątne → Biegunowe"
+        ],
+        key="radio_transformacja"
     )
 
-    use_start = st.checkbox("Uwzględnij punkt początkowy (X₀, Y₀)")
+    use_start = st.checkbox(
+        "Uwzględnij punkt początkowy (X₀, Y₀)",
+        key="checkbox_transformacja"
+    )
 
+    # ── PUNKT POCZĄTKOWY ────────────────────
     if use_start:
+
         c1, c2 = st.columns(2)
-        x0 = c1.number_input("X₀ [m]", value=10.0)
-        y0 = c2.number_input("Y₀ [m]", value=10.0)
+
+        x0 = c1.number_input(
+            "X₀ [m]",
+            value=10.0,
+            key="x0_transformacja"
+        )
+
+        y0 = c2.number_input(
+            "Y₀ [m]",
+            value=10.0,
+            key="y0_transformacja"
+        )
+
     else:
         x0 = y0 = None
 
     st.divider()
 
-    # ───── PRZYPADEK 1 ─────
+    # ════════════════════════════════════════
+    # PRZYPADEK 1 — BIEGUNOWE → PROSTOKĄTNE
+    # ════════════════════════════════════════
     if tryb.startswith("Biegunowe → Prostokątne"):
-        c1, c2 = st.columns(2)
-        d = c1.number_input("Odległość [m]", value=12.0)
-        az_g = c2.number_input("Azymut [g]", value=67.0)
 
-        if st.button("Oblicz", type="primary", use_container_width=True):
+        c1, c2 = st.columns(2)
+
+        d = c1.number_input(
+            "Odległość [m]",
+            value=12.0,
+            key="d_transformacja"
+        )
+
+        az_g = c2.number_input(
+            "Azymut [g]",
+            value=67.0,
+            key="az_transformacja"
+        )
+
+        if st.button(
+            "Oblicz",
+            type="primary",
+            use_container_width=True,
+            key="oblicz_transformacja_1"
+        ):
+
             try:
                 res = transformacja_geodezyjna(
-                    d=d, az_g=az_g,
-                    x0=x0, y0=y0
+                    d=d,
+                    az_g=az_g,
+                    x0=x0,
+                    y0=y0
                 )
 
+                # ── WYNIKI ───────────────────
                 c1, c2 = st.columns(2)
-                c1.success(f"Przyrost ΔX:\n{res['dX']:.3f} m")
-                c2.success(f"Przyrost ΔY:\n{res['dY']:.3f} m")
+
+                c1.success(
+                    f"Przyrost ΔX:\n{res['dX']:.3f} m"
+                )
+
+                c2.success(
+                    f"Przyrost ΔY:\n{res['dY']:.3f} m"
+                )
 
                 if "X2" in res:
+
                     st.divider()
+
                     c1, c2 = st.columns(2)
-                    c1.success(f"Wspołrzędna X₂:\n{res['X2']:.3f} m")
-                    c2.success(f"Współrzędna Y₂:\n{res['Y2']:.3f} m")
+
+                    c1.success(
+                        f"Współrzędna X₂:\n{res['X2']:.3f} m"
+                    )
+
+                    c2.success(
+                        f"Współrzędna Y₂:\n{res['Y2']:.3f} m"
+                    )
+
+                # ── RAPORT TXT ───────────────
+                raport_txt = f"""
+KALKULATOR GEODEZYJNY
+=====================
+
+MODUŁ:
+Transformacja biegunowe → prostokątne
+
+DANE WEJŚCIOWE:
+
+Odległość = {d:.3f} m
+Azymut = {az_g:.3f} g
+"""
 
                 if x0 is not None and y0 is not None:
+
+                    raport_txt += f"""
+
+PUNKT POCZĄTKOWY:
+
+X0 = {x0:.3f} m
+Y0 = {y0:.3f} m
+"""
+
+                raport_txt += f"""
+
+WYNIKI:
+
+ΔX = {res['dX']:.3f} m
+ΔY = {res['dY']:.3f} m
+"""
+
+                if "X2" in res:
+
+                    raport_txt += f"""
+
+X2 = {res['X2']:.3f} m
+Y2 = {res['Y2']:.3f} m
+"""
+
+                # ── POBIERANIE TXT ──────────
+                st.download_button(
+                    label="💾 Zapisz wyniki TXT",
+                    data=raport_txt,
+                    file_name="transformacja_biegunowe.txt",
+                    mime="text/plain",
+                    use_container_width=True,
+                    key="download_transformacja_1"
+                )
+
+                # ── WYKRES ──────────────────
+                if x0 is not None and y0 is not None:
+
                     with st.expander("Prezentacja graficzna"):
-                        fig = rysuj_transformacje(x0, y0, res["dX"], res["dY"])
+
+                        fig = rysuj_transformacje(
+                            x0,
+                            y0,
+                            res["dX"],
+                            res["dY"]
+                        )
+
                         st.pyplot(fig)
+
                 else:
-                    st.info("Zaznacz opcję punktu początkowego (X₀, Y₀), aby włączyć wykres.")
+                    st.info(
+                        "Zaznacz opcję punktu początkowego (X₀, Y₀), aby włączyć wykres."
+                    )
+
             except ValueError as e:
                 st.error(str(e))
 
-    # ───── PRZYPADEK 2 ─────
+    # ════════════════════════════════════════
+    # PRZYPADEK 2 — PROSTOKĄTNE → BIEGUNOWE
+    # ════════════════════════════════════════
     else:
-        c1, c2 = st.columns(2)
-        dX = c1.number_input("ΔX [m]", value=15.0)
-        dY = c2.number_input("ΔY [m]", value=22.0)
 
-        if st.button("Oblicz", type="primary", use_container_width=True):
+        c1, c2 = st.columns(2)
+
+        dX = c1.number_input(
+            "ΔX [m]",
+            value=15.0,
+            key="dx_transformacja"
+        )
+
+        dY = c2.number_input(
+            "ΔY [m]",
+            value=22.0,
+            key="dy_transformacja"
+        )
+
+        if st.button(
+            "Oblicz",
+            type="primary",
+            use_container_width=True,
+            key="oblicz_transformacja_2"
+        ):
+
             try:
                 res = transformacja_geodezyjna(
-                    dX=dX, dY=dY,
-                    x0=x0, y0=y0
+                    dX=dX,
+                    dY=dY,
+                    x0=x0,
+                    y0=y0
                 )
 
+                # ── WYNIKI ───────────────────
                 c1, c2 = st.columns(2)
-                c1.success(f"Odległość d:\n{res['d']:.3f} m")
-                c2.success(f"Azymut [g]:\n{res['az_g']:.3f}")
+
+                c1.success(
+                    f"Odległość d:\n{res['d']:.3f} m"
+                )
+
+                c2.success(
+                    f"Azymut [g]:\n{res['az_g']:.3f}"
+                )
 
                 if "X2" in res:
+
                     st.divider()
+
                     c1, c2 = st.columns(2)
-                    c1.success(f"Współrzędna X₂:\n{res['X2']:.3f} m")
-                    c2.success(f"Współrzędna Y₂:\n{res['Y2']:.3f} m")
+
+                    c1.success(
+                        f"Współrzędna X₂:\n{res['X2']:.3f} m"
+                    )
+
+                    c2.success(
+                        f"Współrzędna Y₂:\n{res['Y2']:.3f} m"
+                    )
+
+                # ── RAPORT TXT ───────────────
+                raport_txt = f"""
+KALKULATOR GEODEZYJNY
+=====================
+
+MODUŁ:
+Transformacja prostokątne → biegunowe
+
+DANE WEJŚCIOWE:
+
+ΔX = {dX:.3f} m
+ΔY = {dY:.3f} m
+"""
 
                 if x0 is not None and y0 is not None:
+
+                    raport_txt += f"""
+
+PUNKT POCZĄTKOWY:
+
+X0 = {x0:.3f} m
+Y0 = {y0:.3f} m
+"""
+
+                raport_txt += f"""
+
+WYNIKI:
+
+Odległość = {res['d']:.3f} m
+Azymut = {res['az_g']:.3f} g
+"""
+
+                if "X2" in res:
+
+                    raport_txt += f"""
+
+X2 = {res['X2']:.3f} m
+Y2 = {res['Y2']:.3f} m
+"""
+
+                # ── POBIERANIE TXT ──────────
+                st.download_button(
+                    label="💾 Zapisz wyniki TXT",
+                    data=raport_txt,
+                    file_name="transformacja_prostokatne.txt",
+                    mime="text/plain",
+                    use_container_width=True,
+                    key="download_transformacja_2"
+                )
+
+                # ── WYKRES ──────────────────
+                if x0 is not None and y0 is not None:
+
                     with st.expander("Prezentacja graficzna"):
-                        fig = rysuj_transformacje(x0, y0, dX, dY)
+
+                        fig = rysuj_transformacje(
+                            x0,
+                            y0,
+                            dX,
+                            dY
+                        )
+
                         st.pyplot(fig)
+
                 else:
-                    st.info("Zaznacz opcję punktu początkowego (X₀, Y₀), aby włączyć wykres.")
+                    st.info(
+                        "Zaznacz opcję punktu początkowego (X₀, Y₀), aby włączyć wykres."
+                    )
 
             except ValueError as e:
                 st.error(str(e))
-
-
 # ═══════════════════════════════════════════════════════════════
 # FUNKCJA 5 – WCIĘCIE KĄTOWE W PRZÓD
 # ═══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════
+# FUNKCJA 5 – WCIĘCIE KĄTOWE W PRZÓD
+# ═══════════════════════════════════════════════════════════════
+
 elif funkcja.startswith("Wcięcie kątowe w przód"):
+
     st.subheader("📐 Wcięcie kątowe w przód")
+
     with st.expander("Instrukcja"):
         instrukcja_wciecie_katowe()
 
     colA, colB = st.columns(2)
 
+    # ── PUNKT A ─────────────────────────────
     with colA:
+
         st.markdown("**Punkt A**")
-        xA = st.number_input("XA [m]", value=10.0, key="xa")
-        yA = st.number_input("YA [m]", value=10.0, key="ya")
-        alfa = st.number_input("α [°]", value=37.0, min_value=0.0, max_value=180.0, key="alfa")
 
+        xA = st.number_input(
+            "XA [m]",
+            value=10.0,
+            key="xa"
+        )
+
+        yA = st.number_input(
+            "YA [m]",
+            value=10.0,
+            key="ya"
+        )
+
+        alfa = st.number_input(
+            "α [°]",
+            value=37.0,
+            min_value=0.0,
+            max_value=180.0,
+            key="alfa"
+        )
+
+    # ── PUNKT B ─────────────────────────────
     with colB:
-        st.markdown("**Punkt B**")
-        xB = st.number_input("XB [m]", value=25.0, key="xb")
-        yB = st.number_input("YB [m]", value=27.0, key="yb")
-        beta = st.number_input("β [°]", value=69.0, min_value=0.0, max_value=180.0, key="beta")
 
-    if st.button("Oblicz", type="primary", use_container_width=True):
+        st.markdown("**Punkt B**")
+
+        xB = st.number_input(
+            "XB [m]",
+            value=25.0,
+            key="xb"
+        )
+
+        yB = st.number_input(
+            "YB [m]",
+            value=27.0,
+            key="yb"
+        )
+
+        beta = st.number_input(
+            "β [°]",
+            value=69.0,
+            min_value=0.0,
+            max_value=180.0,
+            key="beta"
+        )
+
+    # ── PRZYCISK OBLICZ ────────────────────
+    if st.button(
+        "Oblicz",
+        type="primary",
+        use_container_width=True,
+        key="oblicz_wciecie_katowe"
+    ):
+
         try:
             gamma = 180 - (alfa + beta)
 
             if gamma <= 0:
-                st.error("Suma kątów ≥ 180° – brak rozwiązania.")
+
+                st.error(
+                    "Suma kątów ≥ 180° – brak rozwiązania."
+                )
+
             else:
-                Xp, Yp = wciecie_katowe_wprzod(xA, yA, xB, yB, alfa, beta)
+                # ── OBLICZENIA ───────────────
+                Xp, Yp = wciecie_katowe_wprzod(
+                    xA,
+                    yA,
+                    xB,
+                    yB,
+                    alfa,
+                    beta
+                )
 
-                st.success(f"P: X = {Xp:.3f} m, Y = {Yp:.3f} m")
+                # ── WYNIKI ───────────────────
+                st.success(
+                    f"P: X = {Xp:.3f} m, Y = {Yp:.3f} m"
+                )
 
-                with st.expander("Prezentacja graficzna"):
+                # ── RAPORT TXT ───────────────
+                raport_txt = f"""
+KALKULATOR GEODEZYJNY
+=====================
+
+MODUŁ:
+Wcięcie kątowe w przód
+
+DANE WEJŚCIOWE:
+
+PUNKT A:
+XA = {xA:.3f} m
+YA = {yA:.3f} m
+
+PUNKT B:
+XB = {xB:.3f} m
+YB = {yB:.3f} m
+
+KĄTY:
+
+α = {alfa:.3f} °
+β = {beta:.3f} °
+γ = {gamma:.3f} °
+
+WYNIKI:
+
+XP = {Xp:.3f} m
+YP = {Yp:.3f} m
+"""
+
+                # ── POBIERANIE TXT ──────────
+                st.download_button(
+                    label="💾 Zapisz wyniki TXT",
+                    data=raport_txt,
+                    file_name="wciecie_katowe.txt",
+                    mime="text/plain",
+                    use_container_width=True,
+                    key="download_wciecie_katowe"
+                )
+
+                # ── WYKRES ──────────────────
+                with st.expander(
+                    "Prezentacja graficzna"
+                ):
+
                     fig = rysuj_wciecie_katowe_wprzod(
-                        xA, yA, xB, yB, alfa, beta, Xp, Yp
+                        xA,
+                        yA,
+                        xB,
+                        yB,
+                        alfa,
+                        beta,
+                        Xp,
+                        Yp
                     )
+
                     st.pyplot(fig)
 
         except ValueError as e:
             st.error(str(e))
-
 # ═══════════════════════════════════════════════════════════════
 # FUNKCJA 6 – WCIĘCIE LINIOWE
 # ═══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════
+# FUNKCJA 6 – WCIĘCIE LINIOWE
+# ═══════════════════════════════════════════════════════════════
+
 elif funkcja.startswith("Wcięcie liniowe"):
+
     st.subheader("📍 Wcięcie liniowe")
 
     with st.expander("Instrukcja"):
         instrukcja_wciecie_liniowe()
 
     c1, c2 = st.columns(2)
-    xA = c1.number_input("XA [m]", value=0.0,   format="%.4f",
-                          help="Współrzędna X punktu osnowy A")
-    yA = c2.number_input("YA [m]", value=0.0,   format="%.4f",
-                          help="Współrzędna Y punktu osnowy A")
-    xB = c1.number_input("XB [m]", value=40.0, format="%.4f",
-                          help="Współrzędna X punktu osnowy B")
-    yB = c2.number_input("YB [m]", value=40.0,   format="%.4f",
-                          help="Współrzędna Y punktu osnowy B")
-    dA = c1.number_input("dA – odległość A→P [m]", value=35.0, format="%.4f",
-                          help="Odległość zmierzona od punktu A do punktu P")
-    dB = c2.number_input("dB – odległość B→P [m]", value=45.0, format="%.4f",
-                          help="Odległość zmierzona od punktu B do punktu P")
 
-    if st.button("Oblicz", type="primary",
-                 use_container_width=True):
+    # ── DANE WEJŚCIOWE ─────────────────────
+    xA = c1.number_input(
+        "XA [m]",
+        value=0.0,
+        format="%.4f",
+        help="Współrzędna X punktu osnowy A",
+        key="xA_liniowe"
+    )
+
+    yA = c2.number_input(
+        "YA [m]",
+        value=0.0,
+        format="%.4f",
+        help="Współrzędna Y punktu osnowy A",
+        key="yA_liniowe"
+    )
+
+    xB = c1.number_input(
+        "XB [m]",
+        value=40.0,
+        format="%.4f",
+        help="Współrzędna X punktu osnowy B",
+        key="xB_liniowe"
+    )
+
+    yB = c2.number_input(
+        "YB [m]",
+        value=40.0,
+        format="%.4f",
+        help="Współrzędna Y punktu osnowy B",
+        key="yB_liniowe"
+    )
+
+    dA = c1.number_input(
+        "dA – odległość A→P [m]",
+        value=35.0,
+        format="%.4f",
+        help="Odległość zmierzona od punktu A do punktu P",
+        key="dA_liniowe"
+    )
+
+    dB = c2.number_input(
+        "dB – odległość B→P [m]",
+        value=45.0,
+        format="%.4f",
+        help="Odległość zmierzona od punktu B do punktu P",
+        key="dB_liniowe"
+    )
+
+    # ── PRZYCISK OBLICZ ────────────────────
+    if st.button(
+        "Oblicz",
+        type="primary",
+        use_container_width=True,
+        key="oblicz_wciecie_liniowe"
+    ):
+
         try:
-            rozw = wciecie_liniowe(xA, yA, xB, yB, dA, dB)
-            st.success(f"Rozwiązanie 1:  X = {rozw[0][0]:.4f} m,  Y = {rozw[0][1]:.4f} m")
-            st.success(f"Rozwiązanie 2:  X = {rozw[1][0]:.4f} m,  Y = {rozw[1][1]:.4f} m")
-            st.info("Wybierz rozwiązanie zgodne z lokalizacją punktu w terenie.")
-            with st.expander("Prezentacja graficzna"):
-                st.pyplot(rysuj_wciecie(xA, yA, xB, yB, dA, dB, rozw))
+            # ── OBLICZENIA ───────────────────
+            rozw = wciecie_liniowe(
+                xA,
+                yA,
+                xB,
+                yB,
+                dA,
+                dB
+            )
+
+            # ── WYNIKI ───────────────────────
+            st.success(
+                f"Rozwiązanie 1:  X = {rozw[0][0]:.4f} m,  Y = {rozw[0][1]:.4f} m"
+            )
+
+            st.success(
+                f"Rozwiązanie 2:  X = {rozw[1][0]:.4f} m,  Y = {rozw[1][1]:.4f} m"
+            )
+
+            st.info(
+                "Wybierz rozwiązanie zgodne z lokalizacją punktu w terenie."
+            )
+
+            # ── RAPORT TXT ───────────────────
+            raport_txt = f"""
+KALKULATOR GEODEZYJNY
+=====================
+
+MODUŁ:
+Wcięcie liniowe
+
+DANE WEJŚCIOWE:
+
+PUNKT A:
+XA = {xA:.4f} m
+YA = {yA:.4f} m
+
+PUNKT B:
+XB = {xB:.4f} m
+YB = {yB:.4f} m
+
+ODLEGŁOŚCI:
+
+dA = {dA:.4f} m
+dB = {dB:.4f} m
+
+WYNIKI:
+
+ROZWIĄZANIE 1:
+X = {rozw[0][0]:.4f} m
+Y = {rozw[0][1]:.4f} m
+
+ROZWIĄZANIE 2:
+X = {rozw[1][0]:.4f} m
+Y = {rozw[1][1]:.4f} m
+"""
+
+            # ── POBIERANIE TXT ──────────────
+            st.download_button(
+                label="💾 Zapisz wyniki TXT",
+                data=raport_txt,
+                file_name="wciecie_liniowe.txt",
+                mime="text/plain",
+                use_container_width=True,
+                key="download_wciecie_liniowe"
+            )
+
+            # ── WYKRES ──────────────────────
+            with st.expander(
+                "Prezentacja graficzna"
+            ):
+
+                st.pyplot(
+                    rysuj_wciecie(
+                        xA,
+                        yA,
+                        xB,
+                        yB,
+                        dA,
+                        dB,
+                        rozw
+                    )
+                )
+
         except ValueError as e:
             st.error(str(e))

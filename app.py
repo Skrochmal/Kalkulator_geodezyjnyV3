@@ -300,7 +300,7 @@ $$ d = \\sqrt{(X_2-X_1)^2 + (Y_2-Y_1)^2}$$
 - współrzędne punktu P1 (X₁, Y₁)
 - współrzędne punktu P2 (X₂, Y₂)
 
-**Wynik:** odległość d [m], przyrosty ΔX, ΔY
+**Wynik:** odległość d [m], różnice współrzędnych ΔX, ΔY
 """)
     
 def instrukcja_azymut():
@@ -319,13 +319,14 @@ $$ A = \\arctan2(\\Delta X, \\Delta Y) $$
 
 **Uwagi:**
 - kierunek liczony od osi północy
-- zakres: 0–400ᵍ
+- azymut normalizowany do zakresu 0–400 g
 - dla punktów identycznych azymut jest nieokreślony
 """)
     
 def instrukcja_pole():
     st.markdown("""
-Obliczenie pola powierzchni wieloboku na podstawie współrzędnych punktów.
+Obliczenie pola powierzchni wieloboku na podstawie współrzędnych punktów. Punkty należy podawać w kolejności zgodnej
+z obiegiem wieloboku.
 
 **Wzór Gaussa (sznurowy):**
 
@@ -364,7 +365,7 @@ $$ A = \\arctan2(\\Delta X, \\Delta Y) $$
 **Wynik:** przyrosty lub odległość i azymut, opcjonalnie współrzędne punktu końcowego
 
 **Uwagi:**
-- azymut w gradach
+- azymut wyrażony w gradach [g]
 - kierunek liczony od północy
 - ΔX = ΔY = 0 → brak kierunku
 """)
@@ -389,7 +390,7 @@ $$ \\alpha = \\arccos(\\cos \\alpha) $$
 
 **Uwagi:**
 - istnieją **2 rozwiązania**
-- brak rozwiązania gdy: dA + dB < AB lub |dA − dB| > AB
+- rozwiązanie nie istnieje gdy: dA + dB < AB lub |dA − dB| > AB
 - jedno rozwiązanie gdy okręgi są styczne
 """)
     
@@ -414,8 +415,10 @@ $$ Y_P = \\frac{-X_A + Y_A \\cdot \\cot\\beta + X_B + Y_B \\cdot \\cot\\alpha}{\
 **Wynik:** współrzędne punktu P (X, Y)
 
 **Uwagi:**
-- warunek: **α + β < 180°**
-- wrażliwe na błędy pomiarowe
+- warunek istnienia rozwiązania:
+α + β ≠ 180°
+- metoda jest wrażliwa na błędy pomiaru kątów,
+szczególnie dla małych przecięć kierunków.
 """)
     
 # ═══════════════════════════════════════════════════════════════

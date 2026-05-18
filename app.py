@@ -136,10 +136,20 @@ li { margin-bottom: 0.05rem !important; }
 # FUNKCJE
 # ═══════════════════════════════════════════════════════════════
 
-def odleglosc(x1, y1, x2, y2):
+def odleglosc(
+    x1: float,
+    y1: float,
+    x2: float,
+    y2: float
+) -> float:
     return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
 
-def azymut(x1, y1, x2, y2):
+def azymut(
+    x1: float,
+    y1: float,
+    x2: float,
+    y2: float
+) -> float:
     dx, dy = x2 - x1, y2 - y1
     if dx == 0 and dy == 0:
         raise ValueError("Punkty są identyczne – brak kierunku.")
@@ -150,7 +160,9 @@ def azymut(x1, y1, x2, y2):
     # Normalizacja do zakresu 0-400 gon
     return az_grad % 400.0
 
-def pole_gaussa(punkty):
+def pole_gaussa(
+    punkty: list
+) -> float:
     n = len(punkty)
     if n < 3:
         raise ValueError("Wielobok musi mieć co najmniej 3 wierzchołki.")
@@ -160,7 +172,14 @@ def pole_gaussa(punkty):
         for i in range(n)
     )) / 2
 
-def transformacja_geodezyjna(d=None, az_g=None, dX=None, dY=None, x0=None, y0=None):
+def transformacja_geodezyjna(
+    d: float = None,
+    az_g: float = None,
+    dX: float = None,
+    dY: float = None,
+    x0: float = None,
+    y0: float = None
+) -> dict:
     wynik = {}
 
     if d is not None and az_g is not None:
@@ -197,7 +216,14 @@ def transformacja_geodezyjna(d=None, az_g=None, dX=None, dY=None, x0=None, y0=No
     else:
         raise ValueError("Podaj (d i az_g) albo (dX i dY).")
 
-def wciecie_liniowe(xA, yA, xB, yB, dA, dB):
+def wciecie_liniowe(
+    xA: float,
+    yA: float,
+    xB: float,
+    yB: float,
+    dA: float,
+    dB: float
+) -> list:
     dAB = math.sqrt((xB - xA)**2 + (yB - yA)**2)
     
     if dAB == 0:
@@ -224,13 +250,22 @@ def wciecie_liniowe(xA, yA, xB, yB, dA, dB):
         
     return rozw
 
-def dms(deg):
+def dms(
+    deg: float
+) -> str:
     d = int(deg)
     m = int((deg - d) * 60)
     s = ((deg - d) * 60 - m) * 60
     return f"{d}° {m}' {s:.2f}\""
 
-def wciecie_katowe_wprzod(xA, yA, xB, yB, alfa_deg, beta_deg):
+def wciecie_katowe_wprzod(
+    xA: float,
+    yA: float,
+    xB: float,
+    yB: float,
+    alfa_deg: float,
+    beta_deg: float
+) -> tuple[float, float]:
     # zamiana na radiany
     alfa = math.radians(alfa_deg)
     beta = math.radians(beta_deg)

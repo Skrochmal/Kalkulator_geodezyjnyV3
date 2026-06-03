@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+from shapely.geometry import Polygon
 
 # funkcjonalności kalkulatora
 OPCJE = [
@@ -149,6 +150,12 @@ def pole_gaussa(
         punkty[(i + 1) % n][0] * punkty[i][1]
         for i in range(n)
     )) / 2
+def sprawdz_wielobok(punkty):
+    try:
+        poly = Polygon(punkty)
+        return poly.is_valid
+    except:
+        return False
 
 def transformacja_geodezyjna(
     d: float = None,
@@ -930,7 +937,13 @@ elif funkcja.startswith("Pole powierzchni wieloboku"):
 
             else:
                 pts = df[["X", "Y"]].values.tolist()
-
+                
+                if not sprawdz_wielobok(pts):
+                    st.warning(
+                        "⚠️ Punkty mogą być podane w niewłaściwej kolejności. "
+                        "Wykryto przecinające się krawędzie wieloboku. "
+                        "Sprawdź kolejność punktów zgodnie z obiegiem działki."
+                    )
                 p = pole_gaussa(pts)
 
                 c1, c2, c3 = st.columns(3)
